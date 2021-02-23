@@ -35,12 +35,25 @@ app.use(express.static(publicDirectoryPath));
 // 1. Have server emit "message" when new client connects
 //    - Send "Welcome!" as the event data
 // 2. Have client listen for "message" event and print to console
-
 io.on('connection', (socket) => {
   console.log('New WebSocket connection!');
 
   socket.emit('message', 'Welcome!');
+
+  // 3. Have server listen for 'sendMessage'
+  //    - Send message to all connected clients
+  socket.on('sendMessage', (message) => {
+    io.emit('message', message);
+  });
 });
+
+// Goal III: Allow clients to send messages
+// 1. Create a form with an input and btn
+// 2. Setup event listener for form submissions
+//    - Emit 'sendMessage' with input string as message data
+// 3. Have server listen for 'sendMessage'
+//    - Send message to all connected clients
+
 
 server.listen(port, () => {
   console.log(`Server is up on port ${port}!`);
