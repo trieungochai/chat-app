@@ -39,12 +39,17 @@ io.on('connection', (socket) => {
   console.log('New WebSocket connection!');
 
   socket.emit('message', 'Welcome!');
+  socket.broadcast.emit('message', 'A new user has joined!');
 
   // 3. Have server listen for 'sendMessage'
   //    - Send message to all connected clients
   socket.on('sendMessage', (message) => {
     io.emit('message', message);
   });
+
+  socket.on('disconnect', () => {
+    io.emit('message', 'A user has left!');
+  })
 });
 
 // Goal III: Allow clients to send messages
@@ -53,7 +58,6 @@ io.on('connection', (socket) => {
 //    - Emit 'sendMessage' with input string as message data
 // 3. Have server listen for 'sendMessage'
 //    - Send message to all connected clients
-
 
 server.listen(port, () => {
   console.log(`Server is up on port ${port}!`);
