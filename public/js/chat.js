@@ -1,5 +1,4 @@
 const socket = io();
-
 // server (emit) -> client (receive) --acknowledgement --> server
 // client (emit) -> server (receive) --acknowledgement --> client
 
@@ -43,6 +42,8 @@ document.querySelector('#send-location').addEventListener('click', () => {
     socket.emit('sendLocation', {
       latitude: position.coords.latitude,
       longitude: position.coords.longitude
+    }, () => {
+      console.log('Location shared!');
     });
   });
 });
@@ -52,3 +53,8 @@ document.querySelector('#send-location').addEventListener('click', () => {
 //    - Object should contain latitude & longitude properties
 // 2. Server should listen for "sendLocation"
 //    - When fired, send a "message" to all connected clients "Location: long, lat"
+
+// Goal: Setup acknowledgement
+// 1. Setup the client acknowledgment function
+// 2. Setup the server to send back the acknowledgment
+// 3. Have the client print 'Location shared!' when acknowledged
