@@ -34,6 +34,15 @@ document.querySelector('#send-location').addEventListener('click', () => {
   }
 
   navigator.geolocation.getCurrentPosition((position) => {
-    console.log(position);
+    socket.emit('sendLocation', {
+      latitude: position.coords.latitude,
+      longitude: position.coords.longitude
+    });
   });
 });
+
+// Goal: Share coordinates with other users
+// 1. Have client emit "sendLocation" with an object as the data
+//    - Object should contain latitude & longitude properties
+// 2. Server should listen for "sendLocation"
+//    - When fired, send a "message" to all connected clients "Location: long, lat"
