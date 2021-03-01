@@ -5,6 +5,10 @@ const $messageForm = document.querySelector('#message-form');
 const $messageFormInput = $messageForm.querySelector('input');
 const $messageFormButton = $messageForm.querySelector('button');
 const $sendLocationButton = document.querySelector('#send-location');
+const $messages = document.querySelector('#messages');
+
+// Templates
+const messageTemplate = document.querySelector('#message-template').innerHTML;
 
 // server (emit) -> client (receive) --acknowledgement --> server
 // client (emit) -> server (receive) --acknowledgement --> client
@@ -22,6 +26,10 @@ const $sendLocationButton = document.querySelector('#send-location');
 // 2. Have client listen for "message" event and print to console
 socket.on('message', (message) => {
   console.log(message);
+  const html = Mustache.render(messageTemplate, {
+    message
+  });
+  $messages.insertAdjacentHTML('beforeend', html);
 });
 
 // Goal III: Allow clients to send messages
