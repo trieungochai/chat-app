@@ -4,6 +4,7 @@ const socket = io();
 const $messageForm = document.querySelector('#message-form');
 const $messageFormInput = $messageForm.querySelector('input');
 const $messageFormButton = $messageForm.querySelector('button');
+const $sendLocationButton = document.querySelector('#send-location');
 
 // server (emit) -> client (receive) --acknowledgement --> server
 // client (emit) -> server (receive) --acknowledgement --> client
@@ -47,16 +48,22 @@ $messageForm.addEventListener('submit', (e) => {
     console.log('Message delivered!');
   });
 });
-document.querySelector('#send-location').addEventListener('click', () => {
+
+$sendLocationButton.addEventListener('click', () => {
   if(!navigator.geolocation) {
     return alert('Geolocation is not supported by your browser!');
   }
+
+  // 1. Disable the button just before getting the current position
+  $sendLocationButton.setAttribute('disabled', 'disabled');
 
   navigator.geolocation.getCurrentPosition((position) => {
     socket.emit('sendLocation', {
       latitude: position.coords.latitude,
       longitude: position.coords.longitude
     }, () => {
+      // 2. Enable the button in the acknowledgment callback
+      $sendLocationButton.removeAttribute('disabled');
       console.log('Location shared!');
     });
   });
@@ -73,3 +80,6 @@ document.querySelector('#send-location').addEventListener('click', () => {
 // 2. Setup the server to send back the acknowledgment
 // 3. Have the client print 'Location shared!' when acknowledged
 
+// Goal: Disable the send location button while location being sent
+// 1. Disable the button just before getting the current position
+// 2. Enable the button in the acknowledgment callback
